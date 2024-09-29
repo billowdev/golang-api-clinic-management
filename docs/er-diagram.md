@@ -1,11 +1,3 @@
-# api-clinic-management
-Example api on go in clinic management usecaase and ER Diagram
-
-
-# Business Context
-
-
-## Employee Management
 ```sql
 Table Employee [NOTE: "ข้อมูลพนักงาน แสดงรายละเอียดของพนักงานในระบบ"] {
   id UUID [pk, unique, NOTE: "รหัสประจำตัวพนักงานที่ไม่ซ้ำกัน."]
@@ -25,10 +17,7 @@ Table Employee [NOTE: "ข้อมูลพนักงาน แสดงร�
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
-```
 
-## Patient Management
-```sql
 Table Patient [NOTE: "ข้อมูลคนไข้ แสดงรายละเอียดของคนไข้ในระบบ"] {
   id UUID [pk, unique, NOTE: "รหัสประจำคนไข้ที่ไม่ซ้ำกัน."]
   name VARCHAR(100) [NOTE: "ชื่อคนไข้."]
@@ -48,10 +37,7 @@ Table Patient [NOTE: "ข้อมูลคนไข้ แสดงรายล
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
-```
 
-## Appointment Management
-```sql
 Table Appointment [NOTE: "ข้อมูลการนัดหมาย แสดงรายละเอียดการนัดหมายระหว่างพนักงานกับคนไข้"] {
   id UUID [pk, unique, NOTE: "รหัสประจำตารางการนัดหมายที่ไม่ซ้ำกัน."]
   subject VARCHAR(255) [NOTE: "หัวข้อของการนัดหมาย."]
@@ -63,10 +49,21 @@ Table Appointment [NOTE: "ข้อมูลการนัดหมาย แ�
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
-```
+Table MaterialDisburse [NOTE: "ตารางการเบิกจ่ายวัสดุ แสดงรายละเอียดการเบิกจ่ายวัสดุโดยพนักงาน"] {
+  id UUID [pk, unique, NOTE: "รหัสตารางการเบิกจ่ายวัสดุที่ไม่ซ้ำกัน."]
+  date TIMESTAMP [NOTE: "วันที่เบิกจ่ายวัสดุ."]
+  employee_id UUID [ref: > Employee.id, NOTE: "อ้างอิงถึงข้อมูลพนักงานที่ทำการเบิกจ่าย."]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
+  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
+}
 
-## Material Management
-```sql
+Table MaterialDisburseDetail [NOTE: "รายละเอียดการเบิกจ่ายวัสดุ"] {
+  qty INT [NOTE: "จำนวนวัสดุที่เบิกจ่าย."]
+  material_id UUID [ref: > Material.id, NOTE: "อ้างอิงถึงข้อมูลวัสดุที่เบิกจ่าย."]
+  employee_id UUID [ref: > Employee.id, NOTE: "อ้างอิงถึงข้อมูลพนักงานที่ทำการเบิกจ่าย."]
+}
+
+
 Table Material [NOTE: "ข้อมูลวัสดุ แสดงรายละเอียดของวัสดุในระบบ"] {
   id UUID [pk, unique, NOTE: "รหัสประจำวัสดุที่ไม่ซ้ำกัน."]
   name VARCHAR(255) [NOTE: "ชื่อวัสดุ."]
@@ -91,32 +88,6 @@ Table MaterialOrder [NOTE: "ข้อมูลการสั่งซื้อ�
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
 
-Table MaterialOrderDetail [NOTE: "ข้อมูลรายละเอียดการสั่งซื้อวัสดุ แสดงรายละเอียดวัสดุที่สั่งซื้อในแต่ละรายการ"] {
-  material_order_id UUID [ref: > MaterialOrder.id, NOTE: "อ้างอิงถึงข้อมูลการสั่งซื้อวัสดุ."]
-  material_id UUID [ref: > Material.id, NOTE: "อ้างอิงถึงข้อมูลวัสดุ."]
-  qty INT [NOTE: "จำนวนวัสดุที่สั่งซื้อ."]
-  price DECIMAL(10, 2) [NOTE: "ราคาแต่ละหน่วยของวัสดุ."]
-  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
-  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
-}
-
-Table MaterialDisburse [NOTE: "ตารางการเบิกจ่ายวัสดุ แสดงรายละเอียดการเบิกจ่ายวัสดุโดยพนักงาน"] {
-  id UUID [pk, unique, NOTE: "รหัสตารางการเบิกจ่ายวัสดุที่ไม่ซ้ำกัน."]
-  date TIMESTAMP [NOTE: "วันที่เบิกจ่ายวัสดุ."]
-  employee_id UUID [ref: > Employee.id, NOTE: "อ้างอิงถึงข้อมูลพนักงานที่ทำการเบิกจ่าย."]
-  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
-  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
-}
-
-Table MaterialDisburseDetail [NOTE: "รายละเอียดการเบิกจ่ายวัสดุ"] {
-  qty INT [NOTE: "จำนวนวัสดุที่เบิกจ่าย."]
-  material_id UUID [ref: > Material.id, NOTE: "อ้างอิงถึงข้อมูลวัสดุที่เบิกจ่าย."]
-  employee_id UUID [ref: > Employee.id, NOTE: "อ้างอิงถึงข้อมูลพนักงานที่ทำการเบิกจ่าย."]
-}
-```
-
-## Agent Management
-```sql
 Table Agent [NOTE: "ข้อมูลตัวแทนจำหน่าย แสดงรายละเอียดของตัวแทนจำหน่ายในระบบ"] {
   id UUID [pk, unique, NOTE: "รหัสประจำตัวตัวแทนจำหน่ายที่ไม่ซ้ำกัน."]
   name VARCHAR(255) [NOTE: "ชื่อตัวแทนจำหน่าย."]
@@ -126,38 +97,54 @@ Table Agent [NOTE: "ข้อมูลตัวแทนจำหน่าย �
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
-```
 
-## Medicine Management
-```sql
-Table Medicine [NOTE: "ข้อมูลยา แสดงรายละเอียดของยาที่มีในระบบ"] {
+Table MaterialOrderDetail [NOTE: "ข้อมูลรายละเอียดการสั่งซื้อวัสดุ แสดงรายละเอียดวัสดุที่สั่งซื้อในแต่ละรายการ"] {
+  material_order_id UUID [ref: > MaterialOrder.id, NOTE: "อ้างอิงถึงข้อมูลการสั่งซื้อวัสดุ."]
+  material_id UUID [ref: > Material.id, NOTE: "อ้างอิงถึงข้อมูลวัสดุ."]
+  qty INT [NOTE: "จำนวนวัสดุที่สั่งซื้อ."]
+  price DECIMAL(10, 2) [NOTE: "ราคาแต่ละหน่วยของวัสดุ."]
+  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
+  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
+}
+
+Table Medicine [NOTE: "ข้อมูลยา แสดงรายละเอียดของยาในระบบ"] {
   id UUID [pk, unique, NOTE: "รหัสประจำยาที่ไม่ซ้ำกัน."]
   name VARCHAR(255) [NOTE: "ชื่อยา."]
-  detail TEXT [NOTE: "รายละเอียดยา."]
-  dosage VARCHAR(100) [NOTE: "ขนาดยา."]
-  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
-  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
-}
-```
-
-## Order Management
-```sql
-Table Order [NOTE: "ข้อมูลการสั่งซื้อ แสดงรายละเอียดการสั่งซื้อยาและวัสดุ"] {
-  id UUID [pk, unique, NOTE: "รหัสการสั่งซื้อที่ไม่ซ้ำกัน."]
-  patient_id UUID [ref: > Patient.id, NOTE: "อ้างอิงถึงข้อมูลคนไข้ที่ทำการสั่งซื้อ."]
-  total_price DECIMAL(10, 2) [NOTE: "ราคารวมของการสั่งซื้อ."]
-  status VARCHAR(100) [NOTE: "สถานะการสั่งซื้อ (เช่น 'Pending', 'Completed')."]
+  detail TEXT [NOTE: "รายละเอียดของยา."]
+  unit VARCHAR(50) [NOTE: "หน่วยนับของยา."]
+  medicine_type UUID [ref: > MedicineType.id]
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
 
-Table OrderDetail [NOTE: "รายละเอียดการสั่งซื้อ แสดงรายละเอียดการสั่งซื้อแต่ละรายการ"] {
-  order_id UUID [ref: > Order.id, NOTE: "อ้างอิงถึงข้อมูลการสั่งซื้อ."]
+Table MedicineType [NOTE: "ข้อมูลประเภทยา"] {
+  id UUID [pk, unique, NOTE: "รหัสประจำข้อมูลประเภทยา."]
+  name VARCHAR [NOTE: "ชื่อประเภทยา."]
+  detail TEXT [NOTE: "รายละเอียดประเภทยา."]
+  agent_id UUID [ref: > Agent.id, NOTE: "อ้างอิงถึงข้อมูลเอเย่นต์."]
+}
+Table MedicineOrder [NOTE: "ข้อมูลการสั่งซื้อยา"] {
+  id UUID [pk, unique, NOTE: "รหัสประจำข้อมูลการสั่งซื้อยา."]
+  date TIMESTAMP [NOTE: "วันที่สั่งซื้อ."]
+  total_price DECIMAL [NOTE: "ราคารวม."]
+  receive_date TIMESTAMP [NOTE: "วันที่รับ."]
+  status VARCHAR [NOTE: "สถานะการสั่งซื้อ."]
+  employee_id UUID [ref: > Employee.id, NOTE: "อ้างอิงถึงข้อมูลพนักงานที่ทำการสั่งซื้อ."]
+  agent_id UUID [ref: > Agent.id, NOTE: "อ้างอิงถึงข้อมูลตัวแทนจำหน่าย."]
+}
+Table MedicineOrderDetail [NOTE: "ข้อมูลรายละเอียดการสั่งซื้อยา"] {
+  medicine_order_id UUID [ref: > MedicineOrder.id, NOTE: "อ้างอิงถึงข้อมูลการสั่งซื้อยา."]
   medicine_id UUID [ref: > Medicine.id, NOTE: "อ้างอิงถึงข้อมูลยา."]
-  qty INT [NOTE: "จำนวนยาที่สั่งซื้อ."]
-  price DECIMAL(10, 2) [NOTE: "ราคาแต่ละหน่วยของยา."]
-  created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
-  updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
+  price DECIMAL [NOTE: "ราคายา."]
+  qty INT [NOTE: "จำนวนที่สั่งซื้อ."]
+  remain INT [NOTE: "จำนวนค้างรับ."]
+}
+
+Table MedicineStock [NOTE: "ข้อมูลสต๊อกหรือยาคงเหลือ"] {
+  id UUID [pk, unique, NOTE: "รหัสประจำข้อมูลสต๊อก."]
+  medicine_id UUID [ref: > Medicine.id, NOTE: "อ้างอิงถึงข้อมูลยา."]
+  qty INT [NOTE: "จำนวนยาคงเหลือ."]
+  expired_date DATE [NOTE: "วันหมดอายุของยา."]
 }
 
 Table Course [NOTE: "ข้อมูลคอร์สหรือการรักษา"] {
@@ -175,6 +162,23 @@ Table Course [NOTE: "ข้อมูลคอร์สหรือการร�
   employee_id UUID [ref: > Employee.id, NOTE: "อ้างอิงถึงข้อมูลพนักงาน."]
 }
 
+Table MedicineDisburse [NOTE: "ข้อมูลการจ่ายยา"] {
+  id UUID [pk, unique, NOTE: "รหัสประจำข้อมูลการจ่ายยา."]
+  course_id UUID [ref: > Course.id, NOTE: "อ้างอิงถึงข้อมูลการรักษา."]
+  date TIMESTAMP [NOTE: "วันที่จ่ายยา."]
+}
+
+Table MedicineDisburseDetail [NOTE: "ข้อมูลรายละเอียดการจ่ายยา"] {
+  medicine_disburse_id UUID [ref: > MedicineDisburse.id, NOTE: "อ้างอิงถึงข้อมูลการจ่ายยา."]
+  medicine_stock_id UUID [ref: > MedicineStock.id, NOTE: "อ้างอิงถึงข้อมูลสต๊อกยา."]
+  price DECIMAL [NOTE: "ราคายาที่ขาย."]
+  unit VARCHAR [NOTE: "หน่วยนับ."]
+  qty INT [NOTE: "จำนวนที่จ่าย."]
+  dosage VARCHAR [NOTE: "ขนาดที่รับประทาน."]
+  admin_method VARCHAR [NOTE: "วิธีการรับประทาน."]
+  apply_method VARCHAR [NOTE: "วิธีการทายา."]
+  time_of_admin TIMESTAMP [NOTE: "เวลาใช้ยา."]
+}
 
 Table Receipt [NOTE: "ใบเสร็จ"] {
   id UUID [pk, unique, NOTE: "รหัสใบเสร็จ."]
