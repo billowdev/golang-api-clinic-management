@@ -89,7 +89,7 @@ Table Doctor [NOTE: "ข้อมูลแพทย์ แสดงรายล�
   created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was created."]
   updated_at TIMESTAMP [default: `CURRENT_TIMESTAMP`, NOTE: "Timestamp when the record was last updated."]
 }
-
+```
 
 ## Patient Management
 
@@ -499,7 +499,7 @@ Table Prescription [NOTE: "ข้อมูลการสั่งจ่าย�
   date TIMESTAMP [NOTE: "วันที่สั่งจ่ายยา."]
   instructions TEXT [NOTE: "คำแนะนำการใช้ยา."]
 }
-
+```
 
 ## Medicine Disburse Management
 
