@@ -3,7 +3,7 @@ Example api on go in clinic management usecaase and ER Diagram
 
 
 # Business Context
-
+- https://dbdocs.io/lacakira/clinic?view=relationships
 
 ## Employee Table
 
