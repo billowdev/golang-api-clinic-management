@@ -1,9 +1,13 @@
 # api-clinic-management
 Example api on go in clinic management usecaase and ER Diagram
 
-
 # Business Context
 - https://dbdocs.io/lacakira/clinic?view=relationships
+
+# ER Diagram
+
+![dbdiagram](docs/images/clinic.svg)
+
 
 ## Employee Table
 
